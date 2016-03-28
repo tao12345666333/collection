@@ -1,4 +1,3 @@
-
 译者说
 -----
 `Tornado 4.3`于2015年11月6日发布，该版本正式支持`Python3.5`的`async`/`await`关键字，并且用旧版本CPython编译Tornado同样可以使用这两个关键字，这无疑是一种进步。其次，这是最后一个支持`Python2.6`和`Python3.2`的版本了，在后续的版本了会移除对它们的兼容。现在网络上还没有`Tornado4.3`的中文文档，所以为了让更多的朋友能接触并学习到它，我开始了这个翻译项目，希望感兴趣的小伙伴可以一起参与翻译，项目地址是[tornado-zh on Github](https://github.com/tao12345666333/tornado-zh)，翻译好的文档在[Read the Docs上](https://tornado-zh.readthedocs.org/)直接可以看到。欢迎Issues or PR。
@@ -26,11 +25,11 @@ tornado.web 提供了一种带有异步功能并允许它扩展到大量开放�
 
 查看 用户指南 以了解更多信息.
 
-线程安全说明
+## 线程安全说明
 一般情况下, 在 RequestHandler 中的方法和Tornado 中其他的方法不是 线程安全的. 尤其是一些方法, 例如 write(), finish(), 和 flush() 要求只能从 主线程调用. 如果你使用多线程, 那么在结束请求之前, 使用 IOLoop.add_callback 来把控制权传送回主线程是很重要的.
 
-Request handlers
-class tornado.web.RequestHandler(application, request, **kwargs)
+## Request handlers
+### class tornado.web.RequestHandler(application, request, **kwargs)
 HTTP请求处理的基类.
 
 子类至少应该定义以下”Entry points” 部分中被定义的方法其中之一.

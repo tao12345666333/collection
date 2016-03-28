@@ -23,7 +23,7 @@ WebSockets 允许浏览器和服务器之间进行 双向通信
 有关JavaScript 接口的详细信息： http://dev.w3.org/html5/websockets/ 具体的协议： http://tools.ietf.org/html/rfc6455
 
 一个简单的 WebSocket handler 的实例： 服务端直接返回所有收到的消息给客户端
-
+```python
 class EchoWebSocket(tornado.websocket.WebSocketHandler):
     def open(self):
         print("WebSocket opened")
@@ -33,10 +33,12 @@ class EchoWebSocket(tornado.websocket.WebSocketHandler):
 
     def on_close(self):
         print("WebSocket closed")
+```
 WebSockets 并不是标准的 HTTP 连接. “握手”动作符合 HTTP 标准,但是在”握手”动作之后, 协议是基于消息的. 因此,Tornado 里大多数的 HTTP 工具对于这类 handler 都是不可用的. 用来通讯的方法只有 write_message() , ping() , 和 close() . 同样的,你的 request handler 类里应该使用 open() 而不是 get() 或者 post()
 
 如果你在应用中将这个 handler 分配到 /websocket, 你可以通过如下代码实现:
 
+```python
 var ws = new WebSocket("ws://localhost:8888/websocket");
 ws.onopen = function() {
    ws.send("Hello, world");
@@ -44,6 +46,7 @@ ws.onopen = function() {
 ws.onmessage = function (evt) {
    alert(evt.data);
 };
+```
 这个脚本将会弹出一个提示框 :”You said: Hello, world”
 
 浏览器并没有遵循同源策略(same-origin policy),相应的允许了任意站点使用 javascript 发起任意 WebSocket 连接来支配其他网络.这令人惊讶,并且是一个潜在的安全漏洞,所以 从 Tornado 4.0 开始 WebSocketHandler 需要对希望接受跨域请求的应用通过重写.
@@ -110,13 +113,17 @@ reason 可能是描述连接关闭的文本消息. 这个值被提给客户端,�
 
 要允许所有跨域通信的话（这在 Tornado 4.0 之前是默认的）,只要简单的重写这个方法 让它一直返回 true 就可以了:
 
+```python
 def check_origin(self, origin):
     return True
+```
 要允许所有所有子域下的连接,可以这样实现:
 
+```python
 def check_origin(self, origin):
     parsed_origin = urllib.parse.urlparse(origin)
     return parsed_origin.netloc.endswith(".mydomain.com")
+```
 4.0 新版功能.
 
 ### WebSocketHandler.get_compression_options()
@@ -157,11 +164,13 @@ compression_options 作为 WebSocketHandler.get_compression_options 的 返回�
 
 这个连接支持两种类型的操作.在协程风格下,应用程序通常在一个循环里调用`～.WebSocket ClientConnection.read_message`:
 
+``` python
 conn = yield websocket_connect(url)
 while True:
     msg = yield conn.read_message()
     if msg is None: break
     # Do something with msg
+```
 在回调风格下,需要传递 on_message_callback 到 websocket_connect 里. 在这两种风格里,一个内容是 None 的 message 都标志着 WebSocket 连接已经.
 
 在 3.2 版更改: 允许使用 HTTPRequest 对象来代替 urls.

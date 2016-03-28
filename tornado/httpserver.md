@@ -23,34 +23,43 @@ HTTPServer 默认支持keep-alive链接（对于HTTP/1.1自动开启，而对于
 
 要使server可以服务于SSL加密的流量，需要把 ssl_option 参数 设置为一个 ssl.SSLContext 对象。为了兼容旧版本的Python ssl_options 可能也是一个字典(dictionary)，其中包含传给 ssl.wrap_socket 方法的关键 字参数。:
 
+```python
 ssl_ctx = ssl.create_default_context(ssl.Purpose.CLIENT_AUTH)
 ssl_ctx.load_cert_chain(os.path.join(data_dir, "mydomain.crt"),
                         os.path.join(data_dir, "mydomain.key"))
 HTTPServer(applicaton, ssl_options=ssl_ctx)
+```
 HTTPServer 的初始化依照以下三种模式之一（初始化方法定义 在 tornado.tcpserver.TCPServer ）：
 
 ### listen: 简单的单进程:
 
+```python
 server = HTTPServer(app)
 server.listen(8888)
 IOLoop.current().start()
+```
 在很多情形下， tornado.web.Application.listen 可以用来避免显式的 创建 HTTPServer 。
 
 ### bind/start: 简单的多进程:
 
+```python
 server = HTTPServer(app)
 server.bind(8888)
 server.start(0)  # Fork 多个子进程
 IOLoop.current().start()
+```
 当使用这个接口时，一个 IOLoop 不能被传给 HTTPServer 的构造方法(constructor)。 start 将默认 在单例 IOLoop 上开启server。
 
 ### add_sockets: 高级多进程:
 
+```python
 sockets = tornado.netutil.bind_sockets(8888)
 tornado.process.fork_processes(0)
 server = HTTPServer(app)
 server.add_sockets(sockets)
 IOLoop.current().start()
+```
+
 add_sockets 接口更加复杂， 但是，当fork发生的时候，它可以与 tornado.process.fork_processes 一起使用来提供更好的灵活性。 如果你想使用其他的方法，而不是 tornado.netutil.bind_sockets ， 来创建监听socket， add_sockets 也可以被用在单进程server中。
 
 在 4.0 版更改: 增加了 decompress_request, chunk_size, max_header_size, idle_connection_timeout, body_timeout, max_body_size 参数。支持 HTTPServerConnectionDelegate 实例化为 request_callback 。
