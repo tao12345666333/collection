@@ -1,0 +1,38 @@
+# Author: Jintao Zhang <zhangjintao9020@gmail.com>
+image: docker:latest
+
+services:
+  - docker:dind
+
+variables:
+  DOCKER_DRIVER: overlay2
+  IMAGE_NAME: $CI_REGISTRY/$CI_PROJECT_PATH
+
+stages:
+  - build-origin
+  - build-multi
+
+before_script:
+  - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
+  - docker version
+
+build-latest:
+  stage: build-origin
+  script:
+    - cd python/origin/
+    - IMAGE="$IMAGE_NAME:3.7.0-alpine3.8"
+    - docker build -t $IMAGE .
+    - docker images
+    - docker push $IMAGE
+
+build-normal:
+  stage: build-multi
+  script:
+    - cd python/multi/
+    - IMAGE="$IMAGE_NAME:3.7.0-alpine3.8-multi"
+    - docker build -t $IMAGE .
+    - docker images
+    - docker push $IMAGE
+
+after_script:
+  - docker logout $CI_REGISTRY
