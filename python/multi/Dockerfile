@@ -129,6 +129,7 @@ RUN set -ex; \
 
 FROM alpine:3.8
 
+COPY --from=builder /usr/lib/ /usr/lib/
 COPY --from=builder /usr/local/lib/ /usr/local/lib/
 COPY --from=builder /usr/local/bin/ /usr/local/bin/
 COPY --from=builder /usr/local/include/ /usr/local/include/
