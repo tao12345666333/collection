@@ -18,5 +18,5 @@ steps:
 
 - script: |
     docker version
-    docker pull python
-  displayName: 'Run perf test'
+    docker build -t $(dockerId)/$(imageName) .
+  displayName: 'Run build'
