@@ -3,14 +3,21 @@
 # Add steps that build, run tests, deploy, and more:
 # https://aka.ms/yaml
 
+resources:
+  containers:
+    - container: py36_windows2016
+      image: python:3.6.6-windowsservercore-ltsc2016
+
 pool:
-  vmImage: 'Ubuntu 16.04'
+  vmImage: 'win1803'
+
+
+container: py36_windows2016
 
 steps:
-- script: echo Hello, world!
-  displayName: 'Run a one-line script'
 
 - script: |
-    echo Add other tasks to build, test, and deploy your project.
-    echo See https://aka.ms/yaml
-  displayName: 'Run a multi-line script'
+    python3 -m pip install performance
+    pyperformance run --python=python3 -o windows-perf-py3.json
+    python3 -m perf stats windows-perf-py3.json
+  displayName: 'Run perf test'
