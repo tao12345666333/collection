@@ -5,19 +5,18 @@
 
 resources:
   containers:
-    - container: py36_windows2016
-      image: python:3.6.6-windowsservercore-ltsc2016
+    - container: windows1803
+      image: microsoft/windowsservercore:1803
 
 pool:
   vmImage: 'win1803'
 
 
-container: py36_windows2016
+container: windows1803
 
 steps:
 
 - script: |
-    python3 -m pip install performance
-    pyperformance run --python=python3 -o windows-perf-py3.json
-    python3 -m perf stats windows-perf-py3.json
+    docker version
+    docker pull python
   displayName: 'Run perf test'
